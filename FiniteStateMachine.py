@@ -1,3 +1,4 @@
+import re
 from FSM_components import FSM
 from AddedActions import Actions
 
@@ -29,15 +30,19 @@ def main():
             line_list = line[0:-1].split("~")
             line_list = [elem.split("|") for elem in line_list]
             transitions.append(line_list)
-        # print(q_count, alphabet, transitions)
+        print(q_count, alphabet, transitions)
 
-    exp = "d =a*((b)+ c)*d+1|"
+    # exp = "d =a*((b)+ c)*d+1|"
+    # exp = "abs= ((pos) + 12.45) *(14e-3 + num)|"
+    # exp = "abs = (pos)|"
+    exp = "d =a*((b)+ c)*11e+5+1|"
+    # exp = "   d =  (  (a * ( ( 0.012 + 7E+50 ) )) +((dom)* 228)  )|"
     # "d =a*((b)+ c)*d+1|"
     # "abs = 3.5*((x+66E-5))+y34|"
 
     fsm = FSM(q_count, alphabet, transitions)
+    fsm.show_transitions_table()
     actions = Actions()
-    # fsm.show_transitions_table()
     opz = execute(exp, fsm, actions)
     RPN_to_optimized_code(opz, ["+", "*", "="])
 
@@ -53,13 +58,21 @@ def execute(str, fsm, actions=None):  # Управляющее устройст�
         for i_elem in range(len(str)):  # Цикл по символам строки
 
             # Алгоритм ОПЗ
-            try:
-                if temp_str[len(temp_str) - 1] in ["e", "E"] and 57 <= ord(
-                        temp_str[len(temp_str) - 2]) >= 48:
-                    temp_str += str[i_elem]
-            except IndexError:
-                pass
-            if str[i_elem] == "(":
+            # try:
+            if ("E" in temp_str or "e" in temp_str) and (57 >= ord(temp_str[temp_str.find("e")-1]) >= 48 or 57 >= ord(temp_str[temp_str.find("E")-1]) >= 48):
+                temp_str += str[i_elem]
+                t_elem = i_elem + 1
+                if re.match(r"\d+[Ee][-+]\d+", temp_str):
+                    list_out.append(temp_str)
+                    temp_str = ""
+                # while str[t_elem] not in priority:
+                #     temp_str += str[t_elem]
+                #     t_elem += 1
+                # list_out.append(temp_str)
+                # temp_str = ""
+            # except IndexError:
+            #     pass
+            elif str[i_elem] == "(":
                 stack.append(str[i_elem])
             elif str[i_elem] == " ":
                 pass
@@ -67,12 +80,10 @@ def execute(str, fsm, actions=None):  # Управляющее устройст�
                 if temp_str:
                     list_out.append(temp_str)
                     temp_str = ""
-                if len(stack) == 0 or priority.index(stack[len(stack) - 1]) < priority.index(
-                        str[i_elem]):
+                if len(stack) == 0 or priority.index(stack[len(stack) - 1]) < priority.index(str[i_elem]):
                     stack.append(str[i_elem])
                 else:
-                    while len(stack) != 0 and priority.index(stack[len(stack) - 1]) >= priority.index(
-                            str[i_elem]):
+                    while len(stack) != 0 and priority.index(stack[len(stack) - 1]) >= priority.index(str[i_elem]):
                         list_out.append(stack.pop())
                     stack.append(str[i_elem])
             elif str[i_elem] == ")":
