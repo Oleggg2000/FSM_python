@@ -1,24 +1,26 @@
 from FSM_components import FSM
 from AddedActions import Actions
 
+# exp = "d =a*((b)+ c)*d+1|"
+# exp = "abs= ((pos) + 12.45) *(14e-3 + num)|"
+# exp = "abs = (pos)|"
+# exp = "d =a*((b)+ c)*11e+5+1|"
+# exp = "d =x*a+b+y|"
+# exp = "cost  =  (price+(Tax))*0.98|"
+# exp = "   d =  (  (a * ( ( 0.012 + 7E+50 ) )) +((dom)* 228)  )|"
+# exp = "d =a*((b)+ c)*d+1|"
+exp = "abs = 3.5*((x+66E-5))+y34|"
+
+EXPRESSION = exp
+
 
 def main():
-    # exp = "d =a*((b)+ c)*d+1|"
-    # exp = "abs= ((pos) + 12.45) *(14e-3 + num)|"
-    # exp = "abs = (pos)|"
-    # exp = "d =a*((b)+ c)*11e+5+1|"
-    # exp = "d =x*(a+b)+y|"
-    exp = "cost  =  (price+(Tax))*0.98|"
-    # exp = "   d =  (  (a * ( ( 0.012 + 7E+50 ) )) +((dom)* 228)  )|"
-    # "d =a*((b)+ c)*d+1|"
-    # "abs = 3.5*((x+66E-5))+y34|"
-
     q_count, alphabet, transitions = FSM.parse_file("input.txt")
     fsm = FSM(q_count, alphabet)
     actions = Actions()
     fsm.transitions_table = transitions
     # fsm.transitions_table
-    if fsm.execute(exp, actions):
+    if fsm.execute(EXPRESSION, actions):
         RPN_to_optimized_code(fsm.rpn)
 
 
