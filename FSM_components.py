@@ -41,8 +41,8 @@ class FSM:
                 "6": actions.action6
             }
         try:
-            for elem in str:
-                for key in self.transitions[condition]:
+            for elem in str:  # Цикл по каждому элементу входного выражения
+                for key in self.transitions[condition]:  # Цикл по ключам таблицы переходы[состояние]
                     if elem in key:
                         if actions is not None and len(self.transitions[condition][key]) > 1:
                             temp_id = actions_dict[self.transitions[condition][key][1]](elem, temp_id, self.rpn, stack)
@@ -51,7 +51,7 @@ class FSM:
                         break
                 if key == list(self.transitions[condition].keys())[-1] and condition != -1:
                     raise SyntaxError
-            if actions.count == 0 and condition == -1:
+            if actions.count == 0 and condition == -1:  # Разбор завершился (if буфер скобок буст и состояние -1)
                 print(f"{str}\nExpression is an acceptable!")
                 print("Reverse Polish notation: " + " ".join(elem for elem in self.rpn))
                 if "(" in str:
@@ -59,15 +59,22 @@ class FSM:
                 else:
                     print("Table of names: " + " ".join(elem for elem in set(self.rpn)))
                 return True
-            elif actions.count != 0:
-                print("Wrong amount of open/close brackets!")
+            elif actions.count != 0:  # Если буфер скобок не пуст, то ошибка
+                print(f"{str}\n" + " " * str.find(elem) + "^" + "\nThe error occurred! Wrong amount of open/close brackets!")
                 return False
-            else:
+            else:  # Если нету маркера конца цепочки (т.е. состояние не -1)
                 print(f"{str}\n" + " " * (str.find(elem) + 1) + "^" + "\nThe error occurred! There's no end-marker")
                 return False
         except ValueError:  # Нету перехода из данного состояния
-            print(f"{str}\n" + " " * str.find(elem) + "^" + "\nThe error occurred! There's no transition from this condition")
-            return False
+            if str.count(elem) > 1:
+                temp = -1
+                for i in range(str.count(elem)):
+                    temp = str.find(elem, temp+1)
+                print(f"{str}\n" + " " * temp + "^" + "\nThe error occurred! There's no transition from this condition")
+                return False
+            else:
+                print(f"{str}\n" + " " * str.find(elem) + "^" + "\nThe error occurred! There's no transition from this condition")
+                return False
         except SyntaxError:  # Недопустимый символ алфавита
             print(f"{str}\n" + " " * str.find(elem) + "^" + "\nThe error occurred! This simbol isn't in alphabet")
             return False
