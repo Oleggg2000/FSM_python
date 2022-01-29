@@ -1,0 +1,4 @@
+LOAD price
+ADD Tax
+MPY 0.98
+STORE cost
