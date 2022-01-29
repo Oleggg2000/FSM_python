@@ -1,5 +1,5 @@
-from FSM_components import FSM
-from AddedActions import Actions
+from FSM_v1.FSM_components import FSM
+from FSM_v1.AddedActions import Actions
 
 # Correct inputs
 exp1 = "d =a*((b)+ c)*d+1|"
