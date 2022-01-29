@@ -10,6 +10,7 @@ exp5 = "cost  =  (price+(Tax))*0.98|"
 exp6 = "   d =  (  (a * ( ( 0.012 + 7E+50 ) )) +((dom)* 228)  )|"
 exp7 = "d =a*((b)+ c)*d+1|"
 exp8 = "abs = 3.5*((x+66E-5))+y34|"
+exp17 = "abs = (10+x)*y+0.98*(price+tax)|"
 # Incorrect inputs
 exp9 = "abs = 5num+80"
 exp10 = "abs = num + em12e-5"
@@ -19,9 +20,8 @@ exp13 = "  abs (=a(*b"
 exp14 = "abs =a(*b"
 exp15 = "abs =a*)b"
 exp16 = "abs =(a*(b)"
-exp17 = "abs = (10+x)*y+0.98*(price+tax)|"
 
-EXPRESSION = exp17
+EXPRESSION = exp5
 
 
 def main():
@@ -33,7 +33,6 @@ def main():
     if fsm.execute(EXPRESSION, actions):
         RPN_to_code(fsm.rpn)
         optimized_code()
-
 
 
 def RPN_to_code(rpn):  # Перевод из ОПЗ в псевдакод
@@ -119,6 +118,7 @@ def optimized_code():
     with open("output.txt", mode="w") as f:
         while code:
             f.write(code.pop(0) + "\n")
+
 
 if __name__ == "__main__":
     main()
